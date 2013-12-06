@@ -1,2 +1,2 @@
-VisualAnalyticsFinalProject
+Visual Analytics - Final Project
 ===========================
