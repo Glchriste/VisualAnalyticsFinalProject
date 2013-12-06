@@ -4,6 +4,11 @@ app = express()
 app.listen 3000
 console.log 'Backend listening on port 3000...'
 
+#recursive_limit = 0
+#recursive_count = 0
+
+json_list = []
+
 sendToFront = (data) ->
 	app.get "/search_result", (req, res) ->
 	  # CSP headers
@@ -25,7 +30,8 @@ search = []
 results = [] #Stores the nodes of the search
 json = ''
 nodes = '\"nodes\":['
-links = '\"links\":['
+# links = '\"links\":['
+links = ''
 recursiveTreePrint = (node_list) ->
 	i = 0
 	while i < node_list.length #For each node in the list of nodes...
@@ -37,16 +43,18 @@ recursiveTreePrint = (node_list) ->
 		results.push currentNode['NAME'][0] #Pushes the node onto results
 		console.log currentNode['NAME'][0] #Prints the node name
 		#console.log currentNode #Prints entire node data
-		if currentNode['$']['CHILDCOUNT'] != '0' #If the node has children, print out the children
-			#nodes += '{\"name\":' + '\"' + currentNode['NAME'][0] + '\",' + '\"group\":' + (i+1) + '},'
+		if currentNode['$']['CHILDCOUNT'] != '0' #and (recursive_count < recursive_limit) #If the node has children, print out the children
+			console.log '{\"name\":' + '\"' + currentNode['NAME'][0] + '\",' + '\"group\":' + (i+1) + '},'
 			#sendToFront 'Children: ' + currentNode['$']['CHILDCOUNT']
 			console.log 'Children: ' + currentNode['$']['CHILDCOUNT']
 			childrenNumber = Number(currentNode['$']['CHILDCOUNT'])
 			c = 0
 			while c < childrenNumber
 				links += '{\"source\":' + (i + c + 1) + ',\"target\":' + i + ',\"value\":' + 1 + '},'
+				console.log '{\"source\":' + (i + c + 1) + ',\"target\":' + i + ',\"value\":' + 1 + '},'
 				c++
 			recursiveTreePrint(currentNode['NODES'][0]['NODE']) #Does the child have children? Recursion!
+			#recursive_count++
 		i++
 
 parseXML = (xml, type) ->
@@ -63,22 +71,26 @@ parseXML = (xml, type) ->
 	    	while i < count
 	    		id = node_list[i]['$']['ID']
 	    		name = node_list[i]['NAME'][0]
-	    		console.log id, name
-	    		queryByID(id)
+	    		console.log id, name + ' ***'
+	    		if id != '' and name != ''
+	    			queryByID(id)
 	    		i++
   else
+  	console.log 'Tree'
   	parseString = require("xml2js").parseString
 	  parseString xml, (err, result) ->
 	  	tree = result['TREE']
 	  	node_list = tree['NODE']
 	  	recursiveTreePrint node_list
-	  	nodes = nodes[0..nodes.length-2]
-	  	nodes += '],'
-	  	links = links[0..links.length-2]
-	  	links += ']'
-	  	#console.log json
-	  	json = '{' + nodes + links + '}'
+	  	nodes = nodes[0..nodes.length-1]
+	  	links = links[0..links.length-1]
+	  json = '{' + nodes[0..nodes.length-2] + '],' + '\"links\":[' + links[0..links.length-2] + ']' + '}'
+	  console.log '*******JSON*******'
+	  #console.log json
+	  #json_list.push json
+	  if json[-3..json.length-2] != '[]'
 	  	sendToFront json
+		console.log json
 
 #Gets the tree of the organism based on its ID
 queryByID = (input) ->
@@ -88,6 +100,6 @@ queryByID = (input) ->
     	#console.log data
     	parseXML data, 'tree'
 
-queryByName 'Humans'
+queryByName 'Human'
 
 #sendToFront 'Hi'
