@@ -1,0 +1,34 @@
+{
+  "name": "Visual_Analytics_Final_Project",
+  "version": "0.0.1",
+  "description": "Assignment for 4122: Final Project",
+  "main": "main.js",
+  "dependencies": {
+    "node.io": "~0.5.1",
+    "coffee-script": "~1.6.3",
+    "xml2js": "~0.4.0",
+    "d3": "~3.3.11",
+    "express": "~3.4.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Glchriste/VisualAnalyticsFinalProject.git"
+  },
+  "keywords": [
+    "d3",
+    "bioinformatics",
+    "visual",
+    "analytics",
+    "uncc"
+  ],
+  "author": "Grace Christenbery & David Illing",
+  "license": "Creative Commons",
+  "bugs": {
+    "url": "https://github.com/Glchriste/VisualAnalyticsFinalProject/issues"
+  },
+  "homepage": "https://github.com/Glchriste/VisualAnalyticsFinalProjec"
+}
