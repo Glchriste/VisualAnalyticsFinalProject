@@ -12,8 +12,7 @@
     "request": "~2.28.0",
     "node-phantom": "~0.2.5",
     "underscore": "~1.5.2",
-    "socket.io": "latest",
-    "jade": "latest"
+    "socket.io": "latest"
   },
   "devDependencies": {},
   "scripts": {
