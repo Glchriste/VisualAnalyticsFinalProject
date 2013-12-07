@@ -9,7 +9,8 @@ Install these libaries on your computer! You need them to run this web app.
 1. [Node.js](http://nodejs.org/dist/v0.10.20/node-v0.10.20.tar.gz)
 2. [CoffeeScript](http://http://coffeescript.org/)
 3. [PhantomJS](http://phantomjs.org/download.html)
-4. If the node modules do not install correctly with `npm install`, you will have to install them yourself. Otherwise, `backend.coffee` will not compile! Scroll to the bottom of the page to see the list of required modules.
+
+If the node modules do not install correctly with `npm install`, you will have to install them yourself. Otherwise, `backend.coffee` will not compile! Scroll to the bottom of the page to see the list of required modules.
 
 ## Instructions
 1. Run `npm install` in the directory
