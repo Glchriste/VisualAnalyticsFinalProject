@@ -4,6 +4,8 @@ Visual Analytics - Final Project
 If you make any big changes, please make a new branch! :)
 
 ## Requirements
+Install these libaries on your computer! You need them to run this web app.
+
 1. [Node.js](http://nodejs.org/dist/v0.10.20/node-v0.10.20.tar.gz)
 2. [CoffeeScript](http://http://coffeescript.org/)
 3. [PhantomJS](http://phantomjs.org/download.html)
