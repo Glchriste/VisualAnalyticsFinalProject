@@ -152,7 +152,7 @@ queryDivergence = (taxon_a, taxon_b) ->
 	      page.includeJs "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js", (err) ->
 	        #jQuery Loaded.
 	        #Wait for a bit for AJAX content to load on the page. Here, we are waiting 0.1 seconds.
-	        setTimeout (->
+	        # setTimeout (->
 	          page.evaluate (->
 	            #Get what you want from the page using jQuery. A good way is to populate an object with all the jQuery commands that you need and then return the object.
 	            time = []
@@ -239,12 +239,12 @@ queryDivergence = (taxon_a, taxon_b) ->
 	            	console.log 'No result found'
 	            	io.sockets.emit "callback", 'No results. Try searching using the scientific names!'
 	            else
-	            graphs = [JSON.stringify(result["graph_a"]), JSON.stringify(result["graph_b"]), result["diverged"][0]]
+	            graphs = [JSON.stringify(result["graph_a"]), JSON.stringify(result["graph_b"]), result["diverged"][0], JSON.stringify(sortedObjects[1..sortedObjects.length-1])]
 	            io.sockets.emit "callback", graphs
 	            #sendToFront JSON.stringify(result["graph_a"])
 
 	            ph.exit()
-	        ), 5000
+	        # ), 5000
 
 
 

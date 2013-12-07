@@ -45,7 +45,7 @@ THE SOFTWARE.
 
 	#graph-right {
 		margin-top: 0px;
-		margin-left: 300px;
+		margin-left: 275px;
 		/*left: 50%;*/
 		/*width: 50%;*/
 	}
@@ -68,6 +68,11 @@ THE SOFTWARE.
 		top: 105px;
 		left: 625px;
 	}
+    #diverged {
+        position: absolute;
+        top: 105px;
+        left: 625px;
+    }
 
 	#searchA {
         font-size: 12px
@@ -136,7 +141,8 @@ THE SOFTWARE.
 	    <input type="text" name="searchA" value="Type organism A here..." id="searchA">
 	    <input type="text" name="searchB" value="Type organism B here..." id="searchB">
 	    <button type="submit" id="submit">Search</button>
-	    <div id="loading" style="visibility: hidden;"><h2>Loading... Sometimes it takes a minute.</h2></div>
+	    <div id="loading" style="visibility: hidden;"><h2 >Loading... Sometimes it takes a minute.</h2></div>
+        <div id="diverged" style="visibility: hidden;"><h2 id="info">diverged </h2></div>div
     <!-- </form> -->
     </div>
 	<div id="main">
