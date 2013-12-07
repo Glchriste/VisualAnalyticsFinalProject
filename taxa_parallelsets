@@ -1,0 +1,10 @@
+For each dimension, a horizonal bar is shown for each of its possible categories.
+
+Examples:
+
+Survived -> Survived or Perished
+Sex-> Male or Female
+Age -> Adult or Child
+Class -> First Class, Second, Class, Third Class, Crew
+
+Extinct -> Extant or Extinct
