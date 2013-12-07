@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+#graph-left {
+	position: relative;
+	margin-top: 20px;
+	margin-left: 20px;
+}
+
+#graph-right {
+	position: relative;
+	margin-top: 20px;
+	margin-left: 50px;
+}
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+
+</style>
+<body>
+<div id="graph-left"></div>
+<div id="graph-right"></div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="js/libs/jquery-1.10.2.min.js"></script>
+<script>
+
+	$.get('http://localhost:3000/search_result', function(data) {
+		console.log(data);
+	  // set here your svg properties
+	   d3.select("svg")
+	  	var width = 960,height = 700;
+		var color = d3.scale.category20();
+		var force = d3.layout.force()
+		    .charge(-120)
+		    .linkDistance(50)
+		    .size([width, height]);
+		var scale = 1.0;
+		//The left graph
+		var svgA = d3.select("#graph-left").append("svg")
+			.attr("viewBox", "0 0 " + width*scale + " " + height*scale + "")
+		    .attr("width", width)
+		    .attr("height", height)
+		    .attr("preserveAspectRatio", "none");
+		var graphA = $.parseJSON(data[0]);
+		console.log(graphA);
+		  force
+		      .nodes(graphA.nodes)
+		      .links(graphA.links)
+		      .start();
+		  var link = svgA.selectAll(".link")
+		      .data(graphA.links)
+		    .enter().append("line")
+		      .attr("class", "link")
+		      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+		  var node = svgA.selectAll(".node")
+		      .data(graphA.nodes)
+		    .enter().append("circle")
+		      .attr("class", "node")
+		      .attr("r", 7)
+		      .style("fill", function(d) { return color(d.group); })
+		      .call(force.drag);
+		  node.append("title")
+		      .text(function(d) { return d.name; });
+		  force.on("tick", function() {
+		    link.attr("x1", function(d) { return d.source.x; })
+		        .attr("y1", function(d) { return d.source.y; })
+		        .attr("x2", function(d) { return d.target.x; })
+		        .attr("y2", function(d) { return d.target.y; });
+		    node.attr("cx", function(d) { return d.x; })
+		        .attr("cy", function(d) { return d.y; });
+		});
+	});
+
+</script>
+</body>
+</html>
