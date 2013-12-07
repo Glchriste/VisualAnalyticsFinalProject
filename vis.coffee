@@ -1,6 +1,6 @@
 width = 300
 height = 300
-history = []
+history = [] #Graphs that already exist on the page
 
 socket = io.connect("http://localhost:3000")
 $("#submit").on "click", (event) ->
@@ -16,15 +16,13 @@ socket.on "callback", (data) ->
     $("#loading").attr("style", style="visibility: hidden;")
     alert('I apologize, no results found!\n\nTry using the scientific names for organisms!')
   else
-    #console.log data[2]
-    #console.log data[3]
     $("#loading").attr("style", style="visibility: hidden;")
     $("#diverged").attr("style", style="visibility: visible;")
     $("#info").html("diverged " + data[2])
     if $.inArray(data[0],history) == -1
       history.push data[0]    
       
-        #Graph A
+      #Graph A
       d3.select "svg"
       color = d3.scale.category20()
       force = d3.layout.force().charge(-120).linkDistance(30).size([width, height])
@@ -61,6 +59,7 @@ socket.on "callback", (data) ->
 
     if $.inArray(data[1],history) == -1
       history.push data[1]
+
       #Graph B
       color = d3.scale.category20()
       forceB = d3.layout.force().charge(-120).linkDistance(30).size([width, height])
