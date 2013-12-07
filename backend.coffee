@@ -1,11 +1,42 @@
 d3 = require("d3") #Not sure if necessary on the backend, since graphics can't be drawn here
 express = require("express")
 app = express()
+path = require("path")
+
+#server = express() # better instead
+#server.configure ->
+  #server.use "/", express.static(__dirname + "/index.html")
+  #server.use express.static(__dirname + "/public")
+
+
+app.use express.static(__dirname) #// Current directory is root
+# app.use express.static(path.join(__dirname, "public"))
+app.use(express.static(path.join(__dirname, "public"))).use(express.favicon()).use(express.bodyParser())
+app.post "/search", (req, res) ->
+  res.writeHead 200,
+    "content-type": "text/html;charset=UTF8;"
+
+  res.end
+  console.log req.body.searchA, req.body.searchA
+  #console.log typeof(req.body.searchA)
+  queryDivergence(req.body.searchA, req.body.searchB)
+
+app.all "/*", (req, res, next) ->
+  res.header "Access-Control-Allow-Origin", "*"
+  res.header "Access-Control-Allow-Headers", "X-Requested-With"
+  next()
 app.listen 3000
 console.log 'Backend listening on port 3000...'
 
-#recursive_limit = 0
-#recursive_count = 0
+
+
+# app.use express.bodyParser()
+# app.post "/search", (req, res) ->
+#   console.log JSON.stringify(req.body)
+# app.post "/search", (request, response) ->
+# 	console.log request.body.search.A
+  # console.log(JSON.stringify(request.body));
+  #console.log('req.body.searchA', req.body['searchA']);
 
 json_list = []
 
@@ -14,6 +45,7 @@ sendToFront = (data) ->
 	app.get "/search_result", (req, res) ->
 	  # CSP headers
 	  res.set "Access-Control-Allow-Origin", "*"
+	  res.header 'Access-Control-Allow-Methods', 'GET, OPTIONS, POST'
 	  res.set "Access-Control-Allow-Headers", "X-Requested-With"
 	  # Response
 	  res.send data
@@ -189,7 +221,7 @@ queryDivergence = (taxon_a, taxon_b) ->
 	            #console.log sortedObjects
 	            #console.log result["graph_a"]
 	            #console.log result["graph_b"]
-	            console.log JSON.stringify(result["graph_a"])
+	            #console.log JSON.stringify(result["graph_a"])
 	            graphs = [JSON.stringify(result["graph_a"]), JSON.stringify(result["graph_b"])]
 	            sendToFront graphs
 	            #sendToFront JSON.stringify(result["graph_a"])
@@ -197,7 +229,6 @@ queryDivergence = (taxon_a, taxon_b) ->
 	            ph.exit()
 	        #), 100
 
-
-queryDivergence('human', 'dog')
+#queryDivergence('human', 'dog')
 
 

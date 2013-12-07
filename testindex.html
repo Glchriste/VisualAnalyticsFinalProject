@@ -2,82 +2,166 @@
 <meta charset="utf-8">
 <style>
 
-#graph-left {
-	position: relative;
-	margin-top: 20px;
-	margin-left: 20px;
-}
+	h1 {
+	    font-size: 15px;
+	    margin: 16px;
+	}
 
-#graph-right {
-	position: relative;
-	margin-top: 20px;
-	margin-left: 50px;
-}
+	#main {
+		position: absolute;
+		left: 22.5%;
+		top: 20%;
+	}
 
-.node {
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
+	#graph-left {
+		float:left;
+		width: 0%;
+		/*margin-left: 300px;*/
+	}
 
-.link {
-  stroke: #999;
-  stroke-opacity: .6;
-}
+	#graph-right {
+		margin-top: 0px;
+		margin-left: 350px;
+		/*left: 50%;*/
+		/*width: 50%;*/
+	}
+
+	#submit {
+		font-size: 12px
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 900;
+		position: absolute;
+        top: 110px;
+        left: 550px;
+        border: 1px double #DDD;
+        border-radius: 5px;
+        box-shadow: 0 0 5px #333;
+        padding: 5px 10px;
+	}
+
+	#searchA {
+        font-size: 12px
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 900;
+        position: absolute;
+        top: 110px;
+        left: 20px;
+        margin-left: 0px;
+        background: white;
+        border: 1px double #DDD;
+        border-radius: 5px;
+        box-shadow: 0 0 5px #333;
+        color: #666;
+        float: left;
+        padding: 5px 10px;
+        width: 220px;
+        outline: none;
+      }
+
+    #searchB {
+        font-size: 12px
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 900;
+        position: absolute;
+        top: 110px;
+        left: 280px;
+        margin-left: 0px;
+        background: white;
+        border: 1px double #DDD;
+        border-radius: 5px;
+        box-shadow: 0 0 5px #333;
+        color: #666;
+        float: left;
+        padding: 5px 10px;
+        width: 220px;
+        outline: none;
+      }
+
+
+	.node {
+	  stroke: #fff;
+	  stroke-width: 1.5px;
+	}
+
+	.link {
+	  stroke: #999;
+	  stroke-opacity: .6;
+	}
 
 </style>
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/style.css">
 <body>
-<div id="graph-left"></div>
-<div id="graph-right"></div>
+<div id="container" class="container">
+    <header>
+    <h1>Visual Analytics Final Project</h1>
+    <h2>Visualizing Phylogenetic Relationships</h2>
+    </header>
+    <div id="searchbar">
+    <form action='/search' method='post'>
+	    <input type="text" name="searchA" value="Type organism A here..." id="searchA">
+	    <input type="text" name="searchB" value="Type organism B here..." id="searchB">
+	    <button type="submit" id="submit">Search</button>
+    </form>
+    </div>
+	<div id="main">
+		<div id="graph-left"></div>
+		<div id="graph-right"></div>
+	</div>
+</div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="js/libs/jquery-1.10.2.min.js"></script>
+<script src="js/libs/coffee-script.js"></script>
+<script type="text/coffeescript" src="vis.coffee"></script>
 <script>
 
-	$.get('http://localhost:3000/search_result', function(data) {
-		console.log(data);
-	  // set here your svg properties
-	   d3.select("svg")
-	  	var width = 960,height = 700;
-		var color = d3.scale.category20();
-		var force = d3.layout.force()
-		    .charge(-120)
-		    .linkDistance(50)
-		    .size([width, height]);
-		var scale = 1.0;
-		//The left graph
-		var svgA = d3.select("#graph-left").append("svg")
-			.attr("viewBox", "0 0 " + width*scale + " " + height*scale + "")
-		    .attr("width", width)
-		    .attr("height", height)
-		    .attr("preserveAspectRatio", "none");
-		var graphA = $.parseJSON(data[0]);
-		console.log(graphA);
-		  force
-		      .nodes(graphA.nodes)
-		      .links(graphA.links)
-		      .start();
-		  var link = svgA.selectAll(".link")
-		      .data(graphA.links)
-		    .enter().append("line")
-		      .attr("class", "link")
-		      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
-		  var node = svgA.selectAll(".node")
-		      .data(graphA.nodes)
-		    .enter().append("circle")
-		      .attr("class", "node")
-		      .attr("r", 7)
-		      .style("fill", function(d) { return color(d.group); })
-		      .call(force.drag);
-		  node.append("title")
-		      .text(function(d) { return d.name; });
-		  force.on("tick", function() {
-		    link.attr("x1", function(d) { return d.source.x; })
-		        .attr("y1", function(d) { return d.source.y; })
-		        .attr("x2", function(d) { return d.target.x; })
-		        .attr("y2", function(d) { return d.target.y; });
-		    node.attr("cx", function(d) { return d.x; })
-		        .attr("cy", function(d) { return d.y; });
-		});
-	});
+// 	$.get('http://localhost:3000/search_result', function(data) {
+// 		console.log(data);
+// 	  // set here your svg properties
+// 	   d3.select("svg")
+// 	  	var width = 960,height = 700;
+// 		var color = d3.scale.category20();
+// 		var force = d3.layout.force()
+// 		    .charge(-120)
+// 		    .linkDistance(50)
+// 		    .size([width, height]);
+// 		var scale = 1.0;
+// 		//The left graph
+// 		var svgA = d3.select("#graph-left").append("svg")
+// 			.attr("viewBox", "0 0 " + width*scale + " " + height*scale + "")
+// 		    .attr("width", width)
+// 		    .attr("height", height)
+// 		    .attr("preserveAspectRatio", "none");
+// 		var graphA = $.parseJSON(data[0]);
+// 		console.log(graphA);
+// 		  force
+// 		      .nodes(graphA.nodes)
+// 		      .links(graphA.links)
+// 		      .start();
+// 		  var link = svgA.selectAll(".link")
+// 		      .data(graphA.links)
+// 		    .enter().append("line")
+// 		      .attr("class", "link")
+// 		      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+// 		  var node = svgA.selectAll(".node")
+// 		      .data(graphA.nodes)
+// 		    .enter().append("circle")
+// 		      .attr("class", "node")
+// 		      .attr("r", 7)
+// 		      .style("fill", function(d) { return color(d.group); })
+// 		      .call(force.drag);
+// 		  node.append("title")
+// 		      .text(function(d) { return d.name; });
+// 		  force.on("tick", function() {
+// 		    link.attr("x1", function(d) { return d.source.x; })
+// 		        .attr("y1", function(d) { return d.source.y; })
+// 		        .attr("x2", function(d) { return d.target.x; })
+// 		        .attr("y2", function(d) { return d.target.y; });
+// 		    node.attr("cx", function(d) { return d.x; })
+// 		        .attr("cy", function(d) { return d.y; });
+// 		});
+// 	});
 
 </script>
 </body>
