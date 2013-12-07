@@ -3,7 +3,7 @@ Visual Analytics - Final Project
 
 If you make any big changes, please make a new branch! :)
 
-Note: This project does not seem to want to work on Windows. It runs successfully on Ubuntu and Mac OS X.
+Note: This project does not seem to want to compile on Windows. It runs successfully on Ubuntu and Mac OS X.
 
 ## Requirements
 Install these libaries on your computer! You need them to run this web app.
