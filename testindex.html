@@ -99,11 +99,11 @@
     <h2>Visualizing Phylogenetic Relationships</h2>
     </header>
     <div id="searchbar">
-    <form action='/search' method='post'>
+    <!-- <form action='/search' method='post'> -->
 	    <input type="text" name="searchA" value="Type organism A here..." id="searchA">
 	    <input type="text" name="searchB" value="Type organism B here..." id="searchB">
 	    <button type="submit" id="submit">Search</button>
-    </form>
+    <!-- </form> -->
     </div>
 	<div id="main">
 		<div id="graph-left"></div>
@@ -113,7 +113,9 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="js/libs/jquery-1.10.2.min.js"></script>
 <script src="js/libs/coffee-script.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script type="text/coffeescript" src="vis.coffee"></script>
+<!--  
 <script>
 
 // 	$.get('http://localhost:3000/search_result', function(data) {
@@ -162,7 +164,7 @@
 // 		        .attr("cy", function(d) { return d.y; });
 // 		});
 // 	});
-
+-->
 </script>
 </body>
 </html>

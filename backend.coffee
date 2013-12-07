@@ -2,7 +2,7 @@ d3 = require("d3") #Not sure if necessary on the backend, since graphics can't b
 express = require("express")
 app = express()
 path = require("path")
-
+port = 3000
 #server = express() # better instead
 #server.configure ->
   #server.use "/", express.static(__dirname + "/index.html")
@@ -25,9 +25,22 @@ app.all "/*", (req, res, next) ->
   res.header "Access-Control-Allow-Origin", "*"
   res.header "Access-Control-Allow-Headers", "X-Requested-With"
   next()
-app.listen 3000
+#app.listen 3000
+
+io = require("socket.io").listen(app.listen(port))
 console.log 'Backend listening on port 3000...'
 
+
+io.sockets.on "connection", (socket) ->
+  socket.emit "results",
+    message: "Connection establised."
+  socket.on "event", (data) ->
+  	 console.log data
+  socket.on "search", (data) ->
+     console.log data
+     console.log 'Computing divergence...'
+     queryDivergence(data['A'], data['B']) 
+     #io.sockets.emit "callback", data
 
 
 # app.use express.bodyParser()
@@ -223,7 +236,8 @@ queryDivergence = (taxon_a, taxon_b) ->
 	            #console.log result["graph_b"]
 	            #console.log JSON.stringify(result["graph_a"])
 	            graphs = [JSON.stringify(result["graph_a"]), JSON.stringify(result["graph_b"])]
-	            sendToFront graphs
+	            #sendToFront graphs
+	            io.sockets.emit "callback", graphs
 	            #sendToFront JSON.stringify(result["graph_a"])
 
 	            ph.exit()
