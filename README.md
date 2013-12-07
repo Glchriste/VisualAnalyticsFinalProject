@@ -6,6 +6,7 @@ If you make any big changes, please make a new branch! :)
 ## Requirements
 1. [Node.js](http://nodejs.org/dist/v0.10.20/node-v0.10.20.tar.gz)
 2. [CoffeeScript](http://http://coffeescript.org/)
+3. [PhantomJS](http://phantomjs.org/download.html)
 
 ## Instructions
 1. Run `npm install` in the directory
