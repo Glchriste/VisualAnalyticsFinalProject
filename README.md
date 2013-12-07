@@ -12,8 +12,8 @@ If you make any big changes, please make a new branch! :)
 ## Instructions
 1. Run `npm install` in the directory
 2. Run `coffee backend.coffee`
-3. In a new terminal, run `python -m SimpleHTTPServer 8888 &` or `python -m http.server 8888 &` for Python 3+
-4. Go to `http://localhost:8888` and open this directory
+3. Go to `http://localhost:3000` in Chrome or another modern browser
+4. Explore the data!
 
 ### Todo
 1. Add a search bar, where the user can search for organisms by name (Done)
@@ -36,3 +36,5 @@ If you get an error compiling backend.coffee after running `npm install`, instal
   8. socket.io `npm install socket.io`
   9. jade `npm install jade`
   10. xml2js `npm install xml2js`
+
+Then run `coffee backend.coffee`, it should compile!
