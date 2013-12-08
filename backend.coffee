@@ -1,5 +1,6 @@
 d3 = require("d3") #Not sure if necessary on the backend, since graphics can't be drawn here
 express = require("express")
+fs = require("fs")
 app = express()
 path = require("path")
 port = 3000
@@ -50,6 +51,9 @@ io.sockets.on "connection", (socket) ->
 # 	console.log request.body.search.A
   # console.log(JSON.stringify(request.body));
   #console.log('req.body.searchA', req.body['searchA']);
+fs = require("fs")
+
+
 
 json_list = []
 
@@ -144,6 +148,8 @@ queryByID = (input) ->
 
 #Finds how many years ago two organisms diverged
 queryDivergence = (taxon_a, taxon_b) ->
+	queryTaxonomy(taxon_a)
+	queryTaxonomy(taxon_b)
 	phantom = require("node-phantom")
 	phantom.create (err, ph) ->
 	  ph.createPage (err, page) ->
@@ -245,6 +251,111 @@ queryDivergence = (taxon_a, taxon_b) ->
 
 	            ph.exit()
 	        # ), 5000
+
+values = []
+queryTaxonomy = (name) ->
+	phantom = require("node-phantom")
+	phantom.create (err, ph) ->
+	  ph.createPage (err, page) ->
+	  	page.open "http://www.wolframalpha.com/input/?i=#{name}&dataset=", (err, status) ->
+	      console.log "Opened site? ", status
+	      page.includeJs "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js", (err) ->
+	        #jQuery Loaded.
+	        #Wait for a bit for AJAX content to load on the page. Here, we are waiting 0.1 seconds.
+	         #setTimeout (->
+	          page.evaluate (->
+	            #Get what you want from the page using jQuery. A good way is to populate an object with all the jQuery commands that you need and then return the object.
+	            text = []
+	            rows = []
+	            $("map[id^='map']").each ->
+	            	#text.push $(this).html()
+	            	string = $(this).html()
+	            	text.push string
+	            	#text.push $(string).find("area").attr("title href")
+
+	            	# $(this).find("area").map(->
+	            	# 	string = $(this).html()
+	            	# 	text.push string
+	            	# 	#text.push $(string).find("area").html()#.attr("title href")
+	            	# )
+	            #value = $('map')
+	            #text.push($('map'))
+	            #$('map[id~="map"]').each ->
+	            	#$(this).find("area").map(->
+	            		#text.push($(this).html())
+	            		#text.push($(this).html())
+	            	#)
+
+	            text: text
+	          ), (err, result) ->
+	          	console.log 'Print result here:'
+	          	string = result['text'][0]
+	          	#console.log result['text']
+	          	# console.log string
+	          	# console.log result['text'][1]
+	          	# console.log result['text'][result['text'].length-1]
+	          	# console.log string.match(/r?Species.Species?/)
+
+	          	#console.log string
+	          	# getCategory = (regex, string) ->
+		          # 	start = string.search regex
+		          # 	end = string.search /-/
+		          # 	sub = string[start..end]
+		          # 	start2 = sub.search /%/
+		          # 	end2 = sub.search /-/
+		          # 	if sub[start2+3..end2-1] != ''
+		          # 		console.log sub[start2+3..end2-1]
+
+	          	#getCategory /Species.Genus/, result['text'][result['text'].length-1]
+	          	#console.log string.match(/.*\Species.Species%3A *([^-]*).*/)
+	          	getCategory = (category, dictionary) ->
+		          	if category == 'Species'
+		          		value = string.match(/.*\Species.Species%3A *([^-]*).*/)
+		          		if value
+		          			#console.log value[1]
+		          			dictionary['Species'] = value[1]
+		          	else if category == 'Genus'
+		          		value = string.match(/.*\Species.Genus%3A *([^-]*).*/)
+		          		if value
+		          			#console.log value[1]
+		          			dictionary['Genus'] = value[1]
+		          	else if category == 'Family'
+		          		value = string.match(/.*\Species.Family%3A *([^-]*).*/)
+		          		if value
+		          			#console.log value[1]
+		          			dictionary['Family'] = value[1]
+		          	else if category == 'Order'
+		          		value = string.match(/.*\Species.Order%3A *([^-]*).*/)
+		          		if value
+		          			#console.log value[1]
+		          			dictionary['Order'] = value[1]
+		          	dictionary
+	          	#getCategory('Species')
+	          	
+
+
+	          	dictionary = {}
+	          	loopThrough = (array, dictionary) ->
+	          		i = 0
+	          		while i < array.length
+	          			string = array[i]
+	          			getCategory('Order', dictionary)
+	          			getCategory('Family', dictionary)
+	          			getCategory('Genus', dictionary)
+	          			getCategory('Species', dictionary)
+	          			i++
+	          		dictionary
+	          	tax = loopThrough result['text'], dictionary
+	          	console.log tax
+	          	csv_line = tax['Order'] + ',' + tax['Family'] + ',' + tax['Genus'] + ',' + tax['Species']
+	          	values.push csv_line
+	          	io.sockets.emit "csv_callback", csv_line
+	          	ph.exit()
+	         #), 0
+
+
+
+
 
 
 

@@ -1,3 +1,5 @@
+taxonomy = ['Order,Family,Genus,Species', 'Carnivora, Felidae, Felis, Felis Catus', 'Carnivora, Canidae, Canis, Canis Lupus']
+
 curves = ->
   t = vis.transition().duration(500)
   if ice
@@ -33,7 +35,7 @@ truncateText = (text, width) ->
       else
         hi = mid
     (if lo > 1 then t.substr(0, lo - 2) + "…" else "")
-chart = d3.parsets().dimensions(["Survived", "Sex", "Age", "Class"])
+chart = d3.parsets().dimensions(["Order","Family","Genus","Species"])
 vis = d3.select("#vis").append("svg").attr("width", chart.width()).attr("height", chart.height())
 partition = d3.layout.partition().sort(null).size([chart.width(), chart.height() * 5 / 4]).children((d) ->
   (if d.children then d3.values(d.children) else null)
@@ -41,7 +43,8 @@ partition = d3.layout.partition().sort(null).size([chart.width(), chart.height()
   d.count
 )
 ice = false
-d3.csv "titanic.csv", (csv) ->
+
+d3.csv "taxonomy.csv", (csv) ->
   vis.datum(csv).call chart
   window.icicle = ->
     newIce = @checked

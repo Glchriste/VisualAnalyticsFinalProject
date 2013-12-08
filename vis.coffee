@@ -11,7 +11,14 @@ $("#submit").on "click", (event) ->
     A: $("#searchA").val()
     B: $("#searchB").val()
 
+csv_data = ['Order, Family, Genus, Species']
+socket.on "csv_callback", (data) ->
+  #console.log data
+  csv_data.push data
+  console.log csv_data
+
 socket.on "callback", (data) ->
+  console.log data
   if data[2]  == null
     $("#loading").attr("style", style="visibility: hidden;")
     alert('I apologize, no results found!\n\nTry using the scientific names for organisms!')
