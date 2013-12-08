@@ -1,6 +1,7 @@
 width = 400
 height = 400
 history = [] #Graphs that already exist on the page
+years = []
 
 socket = io.connect("http://localhost:3000")
 $("#submit").on "click", (event) ->
@@ -19,9 +20,13 @@ socket.on "csv_callback", (data) ->
   #console.log data
   #console.log $.isEmptyObject(data)
   if $.isEmptyObject(data) == false and $.isArray(data) == false
+    console.log data
     set_nodes.push data
+    #years.push data[1]
     console.log set_nodes
+    #console.log years
     vis.datum(set_nodes).call chart
+    #$("#timeline").datum(years).call chart
   else if $.isEmptyObject(data)
    console.log "WolframAlpha couldn't find a taxonomy for one of the organisms."
   #console.log set_nodes
@@ -39,9 +44,38 @@ socket.on "callback", (data) ->
     $("#loading").attr("style", style="visibility: hidden;")
     $("#diverged").attr("style", style="visibility: visible;")
     $("#info").html("diverged " + data[2])
+    
     if $.inArray(data[0],history) == -1
-      history.push data[0]    
-      
+      history.push data[0]
+      #year = data[2].match(/^(?:[1-9]\d*|0)?(?:\.\d+)?/);
+      #console.log typeof(parseFloat(year))   
+      #years.push parseFloat(year)
+      #Update timeline chart. Add circle to it
+      #Width and height
+  #     xScale = d3.scale.linear().domain([0, 3000]).range([padding, w - padding * 2])
+  # # # #xScale = d3.scale.ordinal().domain(['2013CE', '500M', '1000M', '1500M', '2000M', '2500M', '3000M']).range([padding, w - padding * 2])
+  #     yScale = d3.scale.linear().domain([0, d3.max(years, (d) ->
+  #       d[0]
+  #     )]).range([h - padding, padding])
+  #     rScale = d3.scale.linear().domain([0, d3.max(years, (d) ->
+  #       d[0]
+  #     )]).range([0, 5])
+  # # # #Define X axis
+  #     xAxis = d3.svg.axis().scale(xScale).tickSize(0).orient("bottom").tickFormat (d) ->
+  #       d + " M"
+  # # #Create SVG element
+  #     timeline = d3.select("#timeline")
+  #     h = 50
+  #     w = 990
+  #     padding = 30
+  #     timeline.append("g").attr("class", "axis").attr("transform", "translate(0," + (h - padding) + ")").call xAxis
+  # #Create circles
+      # timeline.selectAll("circle").data(years).enter().append("circle").attr("class", "circle").attr("cx", (d) ->
+      #   xScale d[0]
+      # ).attr("cy", (d) ->
+      #   yScale 0
+      # ).attr "r", (d) ->
+      #   rScale 5 * 2
     #   #Graph A
     #   d3.select "svg"
     #   color = d3.scale.category20()

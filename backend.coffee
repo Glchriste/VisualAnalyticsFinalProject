@@ -247,6 +247,7 @@ queryDivergence = (taxon_a, taxon_b) ->
 	            	console.log 'No result found'
 	            	io.sockets.emit "callback", 'No results. Try searching using the scientific names!'
 	            else
+	            year = result["diverged"][0]
 	            graphs = [JSON.stringify(result["graph_a"]), JSON.stringify(result["graph_b"]), result["diverged"][0], JSON.stringify(sortedObjects[1..sortedObjects.length-1])]
 	            io.sockets.emit "callback", graphs
 	            #sendToFront JSON.stringify(result["graph_a"])
