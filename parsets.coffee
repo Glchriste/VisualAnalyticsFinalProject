@@ -44,7 +44,7 @@ partition = d3.layout.partition().sort(null).size([chart.width(), chart.height()
 )
 ice = false
 
-d3.csv "taxonomy.csv", (csv) ->
+d3.csv "organisms.csv", (csv) ->
   vis.datum(csv).call chart
   window.icicle = ->
     newIce = @checked

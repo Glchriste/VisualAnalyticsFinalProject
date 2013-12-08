@@ -52,7 +52,9 @@ io.sockets.on "connection", (socket) ->
   # console.log(JSON.stringify(request.body));
   #console.log('req.body.searchA', req.body['searchA']);
 fs = require("fs")
-
+fs.writeFile "organisms.csv", "Order,Family,Genus,Species\n", (err) ->
+  throw err  if err
+  console.log "The \"Order,Family,Genus,Species\" was appended to file!"
 
 
 json_list = []
@@ -347,7 +349,10 @@ queryTaxonomy = (name) ->
 	          		dictionary
 	          	tax = loopThrough result['text'], dictionary
 	          	console.log tax
-	          	csv_line = tax['Order'] + ',' + tax['Family'] + ',' + tax['Genus'] + ',' + tax['Species']
+	          	csv_line = tax['Order'] + ', ' + tax['Family'] + ', ' + tax['Genus'] + ', ' + tax['Species'] + '\n'
+	          	fs.appendFile "organisms.csv", csv_line, (err) ->
+	          		throw err  if err
+	          		console.log "The " + csv_line + " was appended to file!"
 	          	values.push csv_line
 	          	io.sockets.emit "csv_callback", csv_line
 	          	ph.exit()
