@@ -1,4 +1,3 @@
-taxonomy = ['Order,Family,Genus,Species', 'Carnivora, Felidae, Felis, Felis Catus', 'Carnivora, Canidae, Canis, Canis Lupus']
 
 curves = ->
   t = vis.transition().duration(500)
@@ -36,8 +35,8 @@ truncateText = (text, width) ->
         hi = mid
     (if lo > 1 then t.substr(0, lo - 2) + "…" else "")
 chart = d3.parsets().dimensions(["Order","Family","Genus","Species"])
-vis = d3.select("#vis").append("svg").attr("width", chart.width()).attr("height", chart.height())
-partition = d3.layout.partition().sort(null).size([chart.width(), chart.height() * 5 / 4]).children((d) ->
+vis = d3.select("#parallel_sets").append("svg").attr("width", chart.width()).attr("height", chart.height())
+partition = d3.layout.partition().sort(null).size([chart.width(), chart.width() * 5 / 4]).children((d) ->
   (if d.children then d3.values(d.children) else null)
 ).value((d) ->
   d.count

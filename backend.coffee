@@ -348,13 +348,17 @@ queryTaxonomy = (name) ->
 	          			i++
 	          		dictionary
 	          	tax = loopThrough result['text'], dictionary
-	          	console.log tax
+	          	json = {"Order":tax['Order'], "Family":tax['Family'], "Genus":tax['Genus'], "Species":tax['Species']}
 	          	csv_line = tax['Order'] + ', ' + tax['Family'] + ', ' + tax['Genus'] + ', ' + tax['Species'] + '\n'
 	          	fs.appendFile "organisms.csv", csv_line, (err) ->
 	          		throw err  if err
 	          		console.log "The " + csv_line + " was appended to file!"
 	          	values.push csv_line
-	          	io.sockets.emit "csv_callback", csv_line
+	          	if json == [{}]
+	          		io.sockets.emit "csv_callback", ["Error", name]
+	          	else
+	          		io.sockets.emit "csv_callback", json
+	          	
 	          	ph.exit()
 	         #), 0
 

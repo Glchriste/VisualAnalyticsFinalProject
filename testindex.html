@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 	#main {
 		position: absolute;
-		left: 0%;
+		left: 20%;
 		top: 20%;
 	}
 
@@ -119,6 +119,14 @@ THE SOFTWARE.
         left: 1325px;
     }
 
+    #parallel_sets {
+        position: absolute;
+        top: 200px;
+        width: 50%;
+        height: 50%;
+        /*left: 1325px;*/
+    }
+
 	.node {
 	  stroke: #fff;
 	  stroke-width: 1.5px;
@@ -133,6 +141,7 @@ THE SOFTWARE.
 <link rel="stylesheet" href="css/reset.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="/js/libs/d3.parsets/d3.parsets.css">
 <header>
     <title>Visual Analytics</title>
 </header>
@@ -149,7 +158,8 @@ THE SOFTWARE.
 	    <button type="submit" id="submit">Search</button>
 	    <div id="loading" style="visibility: hidden;"><h2 >Loading... Sometimes it takes a minute.</h2></div>
         <div id="diverged" style="visibility: hidden;"><h2 id="info">diverged </h2></div>div
-        <div id="taxonomy"><h2>Taxonomy</h2></div>
+        <!-- <div id="taxonomy"><h2>Taxonomy</h2></div> -->
+        <div id="parallel_sets"><svg id="parallel_sets_chart"></svg></div>
     <!-- </form> -->
     </div>
 	<div id="main">
@@ -159,8 +169,10 @@ THE SOFTWARE.
 </div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="js/libs/jquery-1.10.2.min.js"></script>
+<script src="js/libs/d3.parsets.js"></script>
 <script src="js/libs/coffee-script.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/coffeescript" src="vis.coffee"></script>
+<!-- <script type="text/coffeescript" src="testset.coffee"></script> -->
 </body>
 </html>
