@@ -14,6 +14,7 @@ $("#submit").on "click", (event) ->
 set_nodes = []
 csv_data = ['Order, Family, Genus, Species']
 socket.on "csv_callback", (data) ->
+  curves.call(true)
   #console.log data
   #console.log data
   #console.log $.isEmptyObject(data)
@@ -121,7 +122,8 @@ curves = ->
   if ice
     t.delay 1000
     icicle()
-  t.call chart.tension((if @checked then .5 else 1))
+  #t.call chart.tension((if @checked then .5 else 1))
+  t.call chart.tension(.5)
 iceTransition = (g) ->
   g.transition().duration 1000
 ribbonPath = (s, t, tension) ->
@@ -240,7 +242,6 @@ window.icicle = ->
     vis.selectAll("tspan.sort").style "visibility", null
 
 d3.select("#icicle").on("change", icicle).each icicle
-
 # d3.select("#file").on "change", ->
 #   file = @files[0]
 #   reader = new FileReader

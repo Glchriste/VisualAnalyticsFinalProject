@@ -115,16 +115,21 @@ THE SOFTWARE.
 
     #taxonomy {
         position: absolute;
-        top: 105px;
+        top: 110px;
         left: 1325px;
     }
 
     #parallel_sets {
         position: absolute;
-        top: 200px;
-        width: 50%;
-        height: 50%;
+        top: 220px;
+        /*width: 50%;*/
+        /*height: 50%;*/
         /*left: 1325px;*/
+    }
+
+    #timeline-div {
+        position: relative;
+        top: 135px;
     }
 
 	.node {
@@ -137,11 +142,37 @@ THE SOFTWARE.
 	  stroke-opacity: .6;
 	}
 
+    .circle {
+        fill: steelblue;
+        stroke: black;
+        stroke-width: 0px;
+        opacity: 1.0;
+    }
+
+    .circle:hover {
+        fill: darkblue;
+        stroke: black;
+        stroke-width: 2px;
+    }
+
+    .axis text {
+        font: 10px sans-serif;
+    }
+
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      stroke-width: 3px;
+      opacity: 0.5;
+      shape-rendering: crispEdges;
+    }
+
 </style>
 <link rel="stylesheet" href="css/reset.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="/js/libs/d3.parsets/d3.parsets.css">
+<!-- <link rel="stylesheet" href="css/nv.d3.css"> -->
+<link rel="stylesheet" href="css/d3.parsets.css">
 <header>
     <title>Visual Analytics</title>
 </header>
@@ -160,6 +191,8 @@ THE SOFTWARE.
         <div id="diverged" style="visibility: hidden;"><h2 id="info">diverged </h2></div>div
         <!-- <div id="taxonomy"><h2>Taxonomy</h2></div> -->
         <div id="parallel_sets"><svg id="parallel_sets_chart"></svg></div>
+        <div id="timeline-div"><svg id="timeline"></svg></div>
+        <!-- <div id="divergence-timeline"><svg id="divergence-chart"></svg></div> -->
     <!-- </form> -->
     </div>
 	<div id="main">
@@ -172,7 +205,12 @@ THE SOFTWARE.
 <script src="js/libs/d3.parsets.js"></script>
 <script src="js/libs/coffee-script.js"></script>
 <script src="/socket.io/socket.io.js"></script>
+<!-- <script src="js/libs/nv.d3.min.js"></script> -->
+<!-- <script src="divergence-test.js"></script> -->
 <script type="text/coffeescript" src="vis.coffee"></script>
+<script type="text/coffeescript" src="timeline.coffee"></script>
+<!-- <script type="text/coffeescript" src="divergence-chart.coffee"></script> -->
+<!-- <script type="text/coffeescript" src="divergence-chart.coffee"></script> -->
 <!-- <script type="text/coffeescript" src="testset.coffee"></script> -->
 </body>
 </html>
