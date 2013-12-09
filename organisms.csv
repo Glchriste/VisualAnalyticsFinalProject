@@ -1,3 +1,9 @@
 Order,Family,Genus,Species
-Carnivora, Felidae, Felis, FelisCatus
 Carnivora, Canidae, Canis, CanisLupus
+Primates, Hominidae, Homo, HomoSapiens
+Carnivora, Felidae, Panthera, PantheraTigris
+Carnivora, Felidae, Felis, FelisCatus
+Perissodactyla, Equidae, Equus, EquusZebra
+Perissodactyla, Equidae, Equus, EquusCaballus
+Primates, Hominidae, Homo, HomoSapiens
+undefined, undefined, undefined, undefined

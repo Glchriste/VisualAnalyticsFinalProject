@@ -1,3 +1,113 @@
+
+timechart = (data, svg, years, color) ->
+  w = 970
+  h = 50
+  padding = 20
+  console.log color
+  #years.push parseFloat(year[0])
+  xScale = d3.scale.linear().domain([0, 3000]).range([padding, w - padding * 2])
+  yScale = d3.scale.linear().domain([0, d3.max(data, (d) ->
+    d[0]
+  )]).range([h-padding,padding])
+  rScale = d3.scale.linear().domain([0, d3.max(data, (d) ->
+    d[0]
+  )]).range([0,5])
+  #Define X Axis
+  xAxis = d3.svg.axis().scale(xScale).tickSize(0).orient("bottom").tickFormat (d) ->
+    d + " M"
+  #Get svg element
+  #timeline = d3.select("#timeline")
+  #h = 50
+  #w = 990
+  #padding = 30
+  svg.append("g").attr("class", "axis").attr("transform", "translate(0," + (h - padding) + ")").call xAxis
+  #Create circles
+  svg.selectAll("circle").data(years).enter().append("circle").attr("fill", color).attr("class", "circle").attr("cx", (d) ->
+    xScale d
+  ).attr("cy", (d) ->
+    yScale 0
+  ).attr "r", (d) ->
+    10
+  console.log 'Added circle'
+  color = d3.scale.category20()
+  force = d3.layout.force().charge(-120).linkDistance(30).size([width, height])
+  scale = 0.9
+  # width = 600
+  # height = 600
+  #Graph A
+  console.log 'Making graphs'
+  #d3.select('#left_network').remove()
+  #d3.select('#right_network').remove()
+  #The left graph
+
+  svgA = d3.select("#left_network").attr("viewBox", "0 0 " + width * scale + " " + height * scale + "").attr("width", width).attr("height", height).attr("preserveAspectRatio", "none")
+  graphA = $.parseJSON(data[0])
+  console.log graphA
+  force.nodes(graphA.nodes).links(graphA.links).start()
+  link = svgA.selectAll(".link").data(graphA.links).enter().append("line").attr("class", "link").style("stroke-width", (d) ->
+    Math.sqrt d.value
+  )
+  node = svgA.selectAll(".node").data(graphA.nodes).enter().append("circle").attr("class", "node").attr("r", 10).style("fill", (d) ->
+    color d.group
+  ).call(force.drag)
+  node.append("title").text (d) ->
+    d.name
+
+  force.on "tick", ->
+    link.attr("x1", (d) ->
+      d.source.x
+    ).attr("y1", (d) ->
+      d.source.y
+    ).attr("x2", (d) ->
+      d.target.x
+    ).attr "y2", (d) ->
+      d.target.y
+
+    node.attr("cx", (d) ->
+      d.x
+    ).attr "cy", (d) ->
+      d.y
+
+  # if $.inArray(data[1],history) == -1
+  #   history.push data[1]
+
+  #Graph B
+  color = d3.scale.category20()
+  forceB = d3.layout.force().charge(-120).linkDistance(30).size([width, height])
+  scale = 0.9
+  
+  #The right graph
+  d3.select("svg")
+  svgB = d3.select("#right_network").attr("viewBox", "0 0 " + width * scale + " " + height * scale + "").attr("width", width).attr("height", height).attr("preserveAspectRatio", "none")
+  graphB = $.parseJSON(data[1])
+  console.log graphB
+  forceB.nodes(graphB.nodes).links(graphB.links).start()
+  linkB = svgB.selectAll(".link").data(graphB.links).enter().append("line").attr("class", "link").style("stroke-width", (d) ->
+    Math.sqrt d.value
+  )
+  nodeB = svgB.selectAll(".node").data(graphB.nodes).enter().append("circle").attr("class", "node").attr("r", 10).style("fill", (d) ->
+    color d.group
+  ).call(forceB.drag)
+  nodeB.append("title").text (d) ->
+    d.name
+
+  forceB.on "tick", ->
+    linkB.attr("x1", (d) ->
+      d.source.x
+    ).attr("y1", (d) ->
+      d.source.y
+    ).attr("x2", (d) ->
+      d.target.x
+    ).attr "y2", (d) ->
+      d.target.y
+
+    nodeB.attr("cx", (d) ->
+      d.x
+    ).attr "cy", (d) ->
+      d.y
+  #timeline = d3.select("#timeline")
+  #timeline.datum(years).call timechart(timeline, years)
+
 width = 400
 height = 400
 history = [] #Graphs that already exist on the page
@@ -16,7 +126,7 @@ set_nodes = []
 csv_data = ['Order, Family, Genus, Species']
 socket.on "csv_callback", (data) ->
   curves.call(true)
-  #console.log data
+  console.log data
   #console.log data
   #console.log $.isEmptyObject(data)
   if $.isEmptyObject(data) == false and $.isArray(data) == false
@@ -36,6 +146,7 @@ socket.on "csv_callback", (data) ->
   #console.log csv_data
 
 socket.on "callback", (data) ->
+  palette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
   #console.log data
   if data[2]  == null
     $("#loading").attr("style", style="visibility: hidden;")
@@ -44,110 +155,86 @@ socket.on "callback", (data) ->
     $("#loading").attr("style", style="visibility: hidden;")
     $("#diverged").attr("style", style="visibility: visible;")
     $("#info").html("diverged " + data[2])
+    year = data[2].match(/^(?:[1-9]\d*|0)?(?:\.\d+)?/)
+    #console.log parseFloat(year[0])
+    #Update timeline chart. Add circle to it
+    #Get SVG element
+    #if year
+    years.push(year[0])
+    console.log palette
+    console.log years.length
+    color = palette[years.length-1]
+    #console.log palette[years.length-1]
+    timeline = d3.select("#timeline")
+    timeline.datum(years).call timechart(data, timeline, years, color)
+    # #Graph A
+    # console.log 'Making graphs'
+    # #The left graph
+    # svgA = d3.select("#left_network").attr("viewBox", "0 0 " + width * scale + " " + height * scale + "").attr("width", width).attr("height", height).attr("preserveAspectRatio", "none")
+    # graphA = $.parseJSON(data[0])
+    # console.log graphA
+    # force.nodes(graphA.nodes).links(graphA.links).start()
+    # link = svgA.selectAll(".link").data(graphA.links).enter().append("line").attr("class", "link").style("stroke-width", (d) ->
+    #   Math.sqrt d.value
+    # )
+    # node = svgA.selectAll(".node").data(graphA.nodes).enter().append("circle").attr("class", "node").attr("r", 10).style("fill", (d) ->
+    #   color d.group
+    # ).call(force.drag)
+    # node.append("title").text (d) ->
+    #   d.name
+
+    # force.on "tick", ->
+    #   link.attr("x1", (d) ->
+    #     d.source.x
+    #   ).attr("y1", (d) ->
+    #     d.source.y
+    #   ).attr("x2", (d) ->
+    #     d.target.x
+    #   ).attr "y2", (d) ->
+    #     d.target.y
+
+    #   node.attr("cx", (d) ->
+    #     d.x
+    #   ).attr "cy", (d) ->
+    #     d.y
+
+    # # if $.inArray(data[1],history) == -1
+    # #   history.push data[1]
+
+    # #Graph B
+    # color = d3.scale.category20()
+    # forceB = d3.layout.force().charge(-120).linkDistance(30).size([width, height])
+    # scale = 1.0
     
-    if $.inArray(data[0],history) == -1
-      history.push data[0]
-      #year = data[2].match(/^(?:[1-9]\d*|0)?(?:\.\d+)?/);
-      #console.log typeof(parseFloat(year))   
-      #years.push parseFloat(year)
-      #Update timeline chart. Add circle to it
-      #Width and height
-  #     xScale = d3.scale.linear().domain([0, 3000]).range([padding, w - padding * 2])
-  # # # #xScale = d3.scale.ordinal().domain(['2013CE', '500M', '1000M', '1500M', '2000M', '2500M', '3000M']).range([padding, w - padding * 2])
-  #     yScale = d3.scale.linear().domain([0, d3.max(years, (d) ->
-  #       d[0]
-  #     )]).range([h - padding, padding])
-  #     rScale = d3.scale.linear().domain([0, d3.max(years, (d) ->
-  #       d[0]
-  #     )]).range([0, 5])
-  # # # #Define X axis
-  #     xAxis = d3.svg.axis().scale(xScale).tickSize(0).orient("bottom").tickFormat (d) ->
-  #       d + " M"
-  # # #Create SVG element
-  #     timeline = d3.select("#timeline")
-  #     h = 50
-  #     w = 990
-  #     padding = 30
-  #     timeline.append("g").attr("class", "axis").attr("transform", "translate(0," + (h - padding) + ")").call xAxis
-  # #Create circles
-      # timeline.selectAll("circle").data(years).enter().append("circle").attr("class", "circle").attr("cx", (d) ->
-      #   xScale d[0]
-      # ).attr("cy", (d) ->
-      #   yScale 0
-      # ).attr "r", (d) ->
-      #   rScale 5 * 2
-    #   #Graph A
-    #   d3.select "svg"
-    #   color = d3.scale.category20()
-    #   force = d3.layout.force().charge(-120).linkDistance(30).size([width, height])
-    #   scale = 1.0
-      
-    #   #The left graph
-    #   svgA = d3.select("#graph-left").append("svg").attr("viewBox", "0 0 " + width * scale + " " + height * scale + "").attr("width", width).attr("height", height).attr("preserveAspectRatio", "none")
-    #   graphA = $.parseJSON(data[0])
-    #   console.log graphA
-    #   force.nodes(graphA.nodes).links(graphA.links).start()
-    #   link = svgA.selectAll(".link").data(graphA.links).enter().append("line").attr("class", "link").style("stroke-width", (d) ->
-    #     Math.sqrt d.value
-    #   )
-    #   node = svgA.selectAll(".node").data(graphA.nodes).enter().append("circle").attr("class", "node").attr("r", 10).style("fill", (d) ->
-    #     color d.group
-    #   ).call(force.drag)
-    #   node.append("title").text (d) ->
-    #     d.name
+    # #The right graph
+    # d3.select("svg")
+    # svgB = d3.select("#right_network").attr("viewBox", "0 0 " + width * scale + " " + height * scale + "").attr("width", width).attr("height", height).attr("preserveAspectRatio", "none")
+    # graphB = $.parseJSON(data[1])
+    # console.log graphB
+    # forceB.nodes(graphB.nodes).links(graphB.links).start()
+    # linkB = svgB.selectAll(".link").data(graphB.links).enter().append("line").attr("class", "link").style("stroke-width", (d) ->
+    #   Math.sqrt d.value
+    # )
+    # nodeB = svgB.selectAll(".node").data(graphB.nodes).enter().append("circle").attr("class", "node").attr("r", 10).style("fill", (d) ->
+    #   color d.group
+    # ).call(forceB.drag)
+    # nodeB.append("title").text (d) ->
+    #   d.name
 
-    #   force.on "tick", ->
-    #     link.attr("x1", (d) ->
-    #       d.source.x
-    #     ).attr("y1", (d) ->
-    #       d.source.y
-    #     ).attr("x2", (d) ->
-    #       d.target.x
-    #     ).attr "y2", (d) ->
-    #       d.target.y
+    # forceB.on "tick", ->
+    #   linkB.attr("x1", (d) ->
+    #     d.source.x
+    #   ).attr("y1", (d) ->
+    #     d.source.y
+    #   ).attr("x2", (d) ->
+    #     d.target.x
+    #   ).attr "y2", (d) ->
+    #     d.target.y
 
-    #     node.attr("cx", (d) ->
-    #       d.x
-    #     ).attr "cy", (d) ->
-    #       d.y
-
-    # if $.inArray(data[1],history) == -1
-    #   history.push data[1]
-
-    #   #Graph B
-    #   color = d3.scale.category20()
-    #   forceB = d3.layout.force().charge(-120).linkDistance(30).size([width, height])
-    #   scale = 1.0
-      
-    #   #The right graph
-    #   d3.select("svg")
-    #   svgB = d3.select("#graph-right").append("svg").attr("viewBox", "0 0 " + width * scale + " " + height * scale + "").attr("width", width).attr("height", height).attr("preserveAspectRatio", "none")
-    #   graphB = $.parseJSON(data[1])
-    #   console.log graphB
-    #   forceB.nodes(graphB.nodes).links(graphB.links).start()
-    #   linkB = svgB.selectAll(".link").data(graphB.links).enter().append("line").attr("class", "link").style("stroke-width", (d) ->
-    #     Math.sqrt d.value
-    #   )
-    #   nodeB = svgB.selectAll(".node").data(graphB.nodes).enter().append("circle").attr("class", "node").attr("r", 10).style("fill", (d) ->
-    #     color d.group
-    #   ).call(forceB.drag)
-    #   nodeB.append("title").text (d) ->
-    #     d.name
-
-    #   forceB.on "tick", ->
-    #     linkB.attr("x1", (d) ->
-    #       d.source.x
-    #     ).attr("y1", (d) ->
-    #       d.source.y
-    #     ).attr("x2", (d) ->
-    #       d.target.x
-    #     ).attr "y2", (d) ->
-    #       d.target.y
-
-    #     nodeB.attr("cx", (d) ->
-    #       d.x
-    #     ).attr "cy", (d) ->
-    #       d.y
+    #   nodeB.attr("cx", (d) ->
+    #     d.x
+    #   ).attr "cy", (d) ->
+    #     d.y
 
 #stuff = [{"Order": "Primates", "Family": "Hominidae", "Genus": "Homo", "Species": "HomoSapiens"}, {"Order": "Primates", "Family": "Hominidae", "Genus": "Homo", "Species": "Test"}]
 stuff = set_nodes

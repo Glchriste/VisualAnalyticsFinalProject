@@ -38,16 +38,16 @@ THE SOFTWARE.
 	}
 
 	#graph-left {
-		float:left;
-		width: 0%;
+		position: absolute;
+        top: 150px;
+        left:-50px;
 		/*margin-left: 300px;*/
 	}
 
 	#graph-right {
-		margin-top: 0px;
-		margin-left: 275px;
-		/*left: 50%;*/
-		/*width: 50%;*/
+		position: absolute;
+        top: 150px;
+        right:10px;
 	}
 
 	#submit {
@@ -143,7 +143,7 @@ THE SOFTWARE.
 	}
 
     .circle {
-        fill: steelblue;
+        /*fill: steelblue;*/
         stroke: black;
         stroke-width: 0px;
         opacity: 0.5;
@@ -190,16 +190,15 @@ THE SOFTWARE.
 	    <input type="text" name="searchB" value="Type organism B here..." id="searchB">
 	    <button type="submit" id="submit">Search</button>
 	    <div id="loading" style="visibility: hidden;"><h2 >Loading... Sometimes it takes a minute.</h2></div>
-        <div id="diverged" style="visibility: hidden;"><h2 id="info">diverged </h2></div>div
+        <div id="diverged" style="visibility: hidden;"><h2 id="info">diverged </h2></div>
         <!-- <div id="taxonomy"><h2>Taxonomy</h2></div> -->
-        <div id="parallel_sets"><svg id="parallel_sets_chart"></svg></div>
+        <div id="graph-left"><svg id="left_network"></svg></div>
+        <div id="graph-right"><svg id="right_network"></svg></div>
         <div id="timeline-div"><svg id="timeline"></svg></div>
+        <div id="parallel_sets"><svg id="parallel_sets_chart"></svg></div>
         <!-- <div id="divergence-timeline"><svg id="divergence-chart"></svg></div> -->
     <!-- </form> -->
     </div>
-	<div id="main">
-		<div id="graph-left"></div>
-		<div id="graph-right"></div>
 	</div>
 </div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -210,7 +209,7 @@ THE SOFTWARE.
 <!-- <script src="js/libs/nv.d3.min.js"></script> -->
 <!-- <script src="divergence-test.js"></script> -->
 <script type="text/coffeescript" src="vis.coffee"></script>
-<script type="text/coffeescript" src="timeline.coffee"></script>
+<!-- <script type="text/coffeescript" src="timeline.coffee"></script> -->
 <!-- <script type="text/coffeescript" src="divergence-chart.coffee"></script> -->
 <!-- <script type="text/coffeescript" src="divergence-chart.coffee"></script> -->
 <!-- <script type="text/coffeescript" src="testset.coffee"></script> -->
